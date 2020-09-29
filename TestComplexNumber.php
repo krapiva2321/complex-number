@@ -13,58 +13,122 @@ class TestComplexNumber
         self::checkSub();
         self::checkMul();
         self::checkDiv();
+        self::checkTrigTransform();
         self::setMessage('Конец тестирования');
     }
 
     protected static function checkNumberStr(): void
     {
         try {
-            new NumberComplex(0, 'bbbb');
+            new AlgComplexNumber(0, 'bbbb');
         } catch (\Exception $e) {
-            self::setMessage('Мнимая переменная проверена (конструктор) +');
-        }
-        try {
-            $nc = new NumberComplex(1, 1);
-            $nc->imaginary = 'bbbb';
-        } catch (\Exception $e) {
-            self::setMessage('Мнимая переменная проверена (сеттер) +');
-        }
-        try {
-            new NumberComplex('aaaa', 0);
-        } catch (\Exception $e) {
-            self::setMessage('Действительная переменная проверена (конструктор) +');
+            self::setMessage('Мнимая переменная alg проверена (конструктор) +');
         }
 
         try {
-            $nc = new NumberComplex(1, 1);
-            $nc->real = 'aaaa';
+            $nc = new AlgComplexNumber(1, 1);
+            $nc->setImaginary('bbbb');
         } catch (\Exception $e) {
-            self::setMessage('Действительная переменная проверена (сеттер) +');
+            self::setMessage('Мнимая переменная alg проверена (сеттер) +');
+        }
+
+        try {
+            new AlgComplexNumber('aaaa', 0);
+        } catch (\Exception $e) {
+            self::setMessage('Действительная переменная alg проверена (конструктор) +');
+        }
+
+        try {
+            $nc = new AlgComplexNumber(1, 1);
+            $nc->setReal('aaaa');
+        } catch (\Exception $e) {
+            self::setMessage('Действительная переменная alg проверена (сеттер) +');
+        }
+
+        try {
+            new TrigComplexNumber(0, 'bbbb');
+        } catch (\Exception $e) {
+            self::setMessage('Модуль числа trig проверен (конструктор) +');
+        }
+
+        try {
+            $nc = new TrigComplexNumber(1, 1);
+            $nc->setImaginary('bbbb');
+        } catch (\Exception $e) {
+            self::setMessage('Мнимая переменная trig проверена (сеттер) +');
+        }
+
+        try {
+            $nc = new TrigComplexNumber(1, 1);
+            $nc->setMod('bbbb');
+        } catch (\Exception $e) {
+            self::setMessage('Модуль числа trig проверен (сеттер) +');
+        }
+
+        try {
+            new TrigComplexNumber('aaaa', 0);
+        } catch (\Exception $e) {
+            self::setMessage('Угол trig проверен (конструктор) +');
+        }
+
+        try {
+            $nc = new TrigComplexNumber(1, 1);
+            $nc->setReal('aaaa');
+        } catch (\Exception $e) {
+            self::setMessage('Действительная переменная trig проверена (сеттер) +');
+        }
+
+        try {
+            $nc = new TrigComplexNumber(1, 1);
+            $nc->setAngle('aaaa');
+        } catch (\Exception $e) {
+            self::setMessage('Угол trig проверен (сеттер) +');
         }
     }
 
     protected static function checkAdd(): void
     {
-        self::setNull('add');
-        self::checkAlgorithm('add');
+        self::setNull('alg','add', new AlgComplexNumber(0, 0), new AlgComplexNumber(0, 0));
+        self::setNull('alg+trig','add', new AlgComplexNumber(0, 0), new TrigComplexNumber(0, 0));
+        self::setNull('trig','add', new TrigComplexNumber(0, 0), new TrigComplexNumber(0, 0));
+
+        self::checkAlgorithm('alg','add', new AlgComplexNumber(5, 3),new AlgComplexNumber(2,1), 8.0623 );
+        self::checkAlgorithm('alg+trig','add', new AlgComplexNumber(5, 3),new TrigComplexNumber(5, 53.13), 10.6301 );
+        self::checkAlgorithm('trig','add', new TrigComplexNumber(4, 53.13),new TrigComplexNumber(5, 53.13), 9 );
     }
 
     protected static function checkSub(): void
     {
-        self::setNull('sub');
-        self::checkAlgorithm('sub');
+        self::setNull('alg','sub', new AlgComplexNumber(0, 0), new AlgComplexNumber(0,0));
+        self::setNull('alg+trig','sub', new AlgComplexNumber(0, 0), new TrigComplexNumber(0, 0));
+        self::setNull('trig','sub', new TrigComplexNumber(0, 0), new TrigComplexNumber(0, 0));
+
+        self::checkAlgorithm('alg','sub', new AlgComplexNumber(5, 3),new AlgComplexNumber(2,1), 3.6056 );
+        self::checkAlgorithm('alg+trig','sub', new AlgComplexNumber(5, 3), new TrigComplexNumber(5, 53.13), 2.2361 );
+        self::checkAlgorithm('trig','sub', new TrigComplexNumber(4, 53.13), new TrigComplexNumber(5, 53.13), 1 );
     }
 
     protected static function checkMul(): void
     {
-        self::setNull('mul');
-        self::checkAlgorithm('mul');
+
+        self::setNull('alg','mul', new AlgComplexNumber(0, 0), new AlgComplexNumber(0, 0));
+        self::setNull('alg+trig','mul', new AlgComplexNumber(0, 0), new TrigComplexNumber(0, 0));
+        self::setNull('trig','mul', new TrigComplexNumber(0, 0), new TrigComplexNumber(0, 0));
+
+        self::checkAlgorithm('alg','mul', new AlgComplexNumber(5, 3),new AlgComplexNumber(2,1), 13.0384 );
+        self::checkAlgorithm('alg+trig','mul', new AlgComplexNumber(5, 3), new TrigComplexNumber(5, 53.13), 29.1548 );
+        self::checkAlgorithm('trig','mul', new TrigComplexNumber(4, 53.13), new TrigComplexNumber(5, 53.13), 20 );
     }
 
     protected static function checkDiv(): void
     {
-        self::setNull('div');
-        self::checkAlgorithm('div');
+        self::setNull('alg','div', new AlgComplexNumber(0, 0), new AlgComplexNumber(0, 0));
+        self::setNull('alg+trig','div', new AlgComplexNumber(0, 0), new TrigComplexNumber(0, 0));
+        self::setNull('trig','div', new TrigComplexNumber(0, 0), new TrigComplexNumber(0, 0));
+
+        self::checkAlgorithm('alg','div', new AlgComplexNumber(5, 3),new AlgComplexNumber(2,1), 0.3835 );
+        self::checkAlgorithm('alg+trig','div', new AlgComplexNumber(5, 3), new TrigComplexNumber(5, 53.13), 0.8575 );
+        self::checkAlgorithm('trig','div', new TrigComplexNumber(4, 53.13), new TrigComplexNumber(5, 53.13), 1.25 );
     }
 
     /**
@@ -77,12 +141,13 @@ class TestComplexNumber
     }
 
     /**
+     * @param $num_type
      * @param $type
+     * @param ComplexNumberInterface $first
+     * @param ComplexNumberInterface $second
      */
-    private static function setNull($type)
+    private static function setNull($num_type, $type, ComplexNumberInterface &$first, ComplexNumberInterface &$second)
     {
-        $first = new NumberComplex(0, 0);
-        $second = new NumberComplex(0,0);
         switch ($type) {
             case 'add' :
                 $result = ComplexMath::add($first, $second);
@@ -97,42 +162,74 @@ class TestComplexNumber
                 $result = ComplexMath::div($first, $second);
                 break;
         }
-        if ($result === 0) {
-            self::setMessage('Алгоритм ' . $type . ' при 0 чисел +');
+        if ($result->getResult() == 0) {
+            self::setMessage($num_type . ' '. 'Алгоритм ' . $type . ' при 0 чисел +');
         } else {
-            self::setMessage('Алгоритм ' . $type . ' при 0 чисел -');
+            self::setMessage($num_type . ' ' . 'Алгоритм ' . $type . ' при 0 чисел -');
         }
     }
 
     /**
+     * @param $num_type
      * @param $type
+     * @param ComplexNumberInterface $first
+     * @param ComplexNumberInterface $second
+     * @param $result
      */
-    private static function checkAlgorithm($type): void
+    private static function checkAlgorithm($num_type, $type, ComplexNumberInterface &$first, ComplexNumberInterface &$second, $result): void
     {
-        $first = new NumberComplex(5, 3);
-        $second = new NumberComplex(2,1);
         switch ($type) {
             case 'add' :
-                $result = ComplexMath::add($first, $second);
-                $standard = 8.0623;
+                $alg = ComplexMath::add($first, $second);
                 break;
             case 'sub' :
-                $result = ComplexMath::sub($first, $second);
-                $standard = 3.6056;
+                $alg = ComplexMath::sub($first, $second);
                 break;
             case 'mul' :
-                $result = ComplexMath::mul($first, $second);
-                $standard = 13.0384;
+                $alg = ComplexMath::mul($first, $second);
                 break;
             case 'div' :
-                $result = ComplexMath::div($first, $second);
-                $standard = 0.3835;
+                $alg = ComplexMath::div($first, $second);
                 break;
         }
-        if ($result !== $standard) {
-            self::setMessage('Алгоритм ' . $type . ' -');
+        if ($alg->getResult() != $result) {
+            self::setMessage($num_type . ' ' . 'Алгоритм ' . $type . ' -');
         } else {
-            self::setMessage('Алгоритм ' . $type . ' +');
+            self::setMessage($num_type . ' ' . 'Алгоритм ' . $type . ' +');
         }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected static function checkTrigTransform()
+    {
+        self::setMessage('Проверка пересчета тригонометрической формы');
+        $tr = new TrigComplexNumber(5, 53.13);
+        if ($tr->getReal() != 3) {
+            self::setMessage('Ошибка расчета real');
+        } else {
+            self::setMessage('Верный расчет real');
+        }
+        if ($tr->getImaginary() != 4) {
+            self::setMessage('Ошибка расчета imaginary');
+        } else {
+            self::setMessage('Верный расчет imaginary');
+        }
+        $tr->setReal(4);
+        $tr->setImaginary(3);
+
+        if ($tr->getMod() != 5) {
+            self::setMessage('Ошибка пересчета mod');
+        } else {
+            self::setMessage('Верный пересчета mod');
+        }
+
+        if ($tr->getAngle() != 36.87) {
+            self::setMessage('Ошибка пересчета angle');
+        } else {
+            self::setMessage('Верный пересчета angle');
+        }
+        self::setMessage('Конец проверки');
     }
 }

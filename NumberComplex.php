@@ -3,40 +3,39 @@
 namespace app;
 
 
-class NumberComplex
+abstract class NumberComplex implements ComplexNumberInterface
 {
     protected $real;
     protected $imaginary;
 
-    public function __construct($a = 0, $b = 0)
-    {
-        if ($this->checkValue($a)) {
-            $this->real = $a;
-        }
-        if ($this->checkValue($b)) {
-            $this->imaginary = $b;
-        }
-    }
-
     /**
-     * @param $name
-     * @param $value
-     * @throws \Exception
-     */
-    public function __set($name, $value)
-    {
-        if ($this->checkValue($value)) {
-            $this->$name = $value;
-        }
-    }
-
-    /**
-     * @param $name
      * @return mixed
      */
-    public function __get($name)
+    public function getImaginary()
     {
-        return $this->$name;
+        return $this->imaginary;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReal()
+    {
+        return $this->real;
+    }
+
+    public function setReal($value)
+    {
+        if ($this->checkValue($value)){
+            $this->real = $value;
+        }
+    }
+
+    public function setImaginary($value)
+    {
+        if ($this->checkValue($value)){
+            $this->imaginary = $value;
+        }
     }
 
     /**
@@ -55,7 +54,7 @@ class NumberComplex
      * @return bool
      * @throws \Exception
      */
-    private function checkValue($value)
+    protected function checkValue($value)
     {
         if (!is_numeric($value)) {
             throw new \Exception('Ошибка, переменная не является числом!');

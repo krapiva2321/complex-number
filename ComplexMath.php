@@ -5,38 +5,73 @@ namespace app;
 
 class ComplexMath
 {
-    public static function add(NumberComplex $first, NumberComplex $second)
+    /**
+     * @param ComplexNumberInterface $first
+     * @param ComplexNumberInterface $second
+     * @return AlgComplexNumber
+     */
+    public static function add(ComplexNumberInterface $first, ComplexNumberInterface $second): AlgComplexNumber
     {
-        $resNum = new NumberComplex();
-        $resNum->real = ($first->real + $second->real);
-        $resNum->imaginary = ($first->imaginary + $second->imaginary);
-        return $resNum->getResult();
+        $resAlg = new AlgComplexNumber();
+        $real = ($first->getReal() + $second->getReal());
+        $imaginary = ($first->getImaginary() + $second->getImaginary());
+        self::setArg($resAlg, $real, $imaginary);
+        return $resAlg;
     }
 
-    public static function sub(NumberComplex $first, NumberComplex $second)
+    /**
+     * @param ComplexNumberInterface $first
+     * @param ComplexNumberInterface $second
+     * @return AlgComplexNumber
+     */
+    public static function sub(ComplexNumberInterface $first, ComplexNumberInterface $second) : AlgComplexNumber
     {
-        $resNum = new NumberComplex();
-        $resNum->real = ($first->real - $second->real);
-        $resNum->imaginary = ($first->imaginary - $second->imaginary);
-        return $resNum->getResult();
+        $resAlg = new AlgComplexNumber();
+        $real = ($first->getReal() - $second->getReal());
+        $imaginary = ($first->getImaginary() - $second->getImaginary());
+        self::setArg($resAlg, $real, $imaginary);
+        return $resAlg;
     }
 
-    public static function mul(NumberComplex $first, NumberComplex $second)
+    /**
+     * @param ComplexNumberInterface $first
+     * @param ComplexNumberInterface $second
+     * @return AlgComplexNumber
+     */
+    public static function mul(ComplexNumberInterface $first, ComplexNumberInterface $second): AlgComplexNumber
     {
-        $resNum = new NumberComplex();
-        $resNum->real = (($first->real * $second->real) - ($first->imaginary * $second->imaginary));
-        $resNum->imaginary = (($first->real * $second->imaginary) + ($first->imaginary * $second->real));
-        return $resNum->getResult();
+        $resAlg = new AlgComplexNumber();
+        $real = (($first->getReal() * $second->getReal()) - ($first->getImaginary() * $second->getImaginary()));
+        $imaginary = (($first->getReal() * $second->getImaginary()) + ($first->getImaginary() * $second->getReal()));
+        self::setArg($resAlg, $real, $imaginary);
+        return $resAlg;
     }
 
-    public static function div(NumberComplex $first, NumberComplex $second)
+    /**
+     * @param ComplexNumberInterface $first
+     * @param ComplexNumberInterface $second
+     * @return AlgComplexNumber
+     */
+    public static function div(ComplexNumberInterface $first, ComplexNumberInterface $second) : AlgComplexNumber
     {
-        if (($first->real + $first->imaginary) == 0) {
-            return 0;
+        if (($first->getReal() + $first->getImaginary()) == 0) {
+            return new AlgComplexNumber(0, 0);
         }
-        $resNum = new NumberComplex();
-        $resNum->real = (($first->real * $second->real) + ($first->imaginary * $second->imaginary))/(pow($first->real, 2) + pow($first->imaginary, 2));
-        $resNum->imaginary = (($first->imaginary * $second->real) - ($first->real * $second->imaginary))/(pow($first->real, 2) + pow($first->imaginary, 2));
-        return $resNum->getResult();
+        $resAlg = new AlgComplexNumber();
+        $real = (($first->getReal() * $second->getReal()) + ($first->getImaginary() * $second->getImaginary()))/(pow($first->getReal(), 2) + pow($first->getImaginary(), 2));
+        $imaginary = (($first->getImaginary() * $second->getReal()) - ($first->getReal() * $second->getImaginary()))/(pow($first->getReal(), 2) + pow($first->getImaginary(), 2));
+        self::setArg($resAlg, $real, $imaginary);
+        return $resAlg;
+    }
+
+    /**
+     * @param AlgComplexNumber $alg
+     * @param $real
+     * @param $imaginary
+     */
+    private static function setArg(AlgComplexNumber &$alg, &$real, &$imaginary)
+    {
+        $alg->setReal($real);
+        $alg->setImaginary($imaginary);
     }
 }
